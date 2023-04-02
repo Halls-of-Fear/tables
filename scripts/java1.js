@@ -1,4 +1,12 @@
-// Define the showItemDetails function
+let items = [
+  { material: 'Wood', type: 'Armor', price: 0 },
+  { material: 'Iron', type: 'Armor', price: 0 },
+  { material: 'Silver', type: 'Armor', price: 0 },
+  { material: 'Wood', type: 'Weapon', price: 0 },
+  { material: 'Iron', type: 'Weapon', price: 0 },
+  { material: 'Silver', type: 'Weapon', price: 0 },
+];
+
 function showItemDetails(item) {
   const details = document.getElementById('details');
   details.innerHTML = `
@@ -8,59 +16,40 @@ function showItemDetails(item) {
   details.addEventListener('click', hideItemDetails);
 }
 
-// Define the hideItemDetails function
 function hideItemDetails() {
   const details = document.getElementById('details');
   details.innerHTML = '';
   details.removeEventListener('click', hideItemDetails);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Define the items array
-  let items = [
-    { material: 'Wood', type: 'Armor', price: 0 },
-    { material: 'Iron', type: 'Armor', price: 0 },
-    { material: 'Silver', type: 'Armor', price: 0 },
-    { material: 'Wood', type: 'Weapon', price: 0 },
-    { material: 'Iron', type: 'Weapon', price: 0 },
-    { material: 'Silver', type: 'Weapon', price: 0 },
-  ];
-
-  // Populate the table cells with prices
+function refreshPrices() {
+  items.forEach(item => {
+    switch (item.material) {
+      case 'Wood':
+        item.price = Math.floor(Math.random() * 10) + 1;
+        break;
+      case 'Iron':
+        item.price = Math.floor(Math.random() * 40) + 11;
+        break;
+      case 'Silver':
+        item.price = Math.floor(Math.random() * 90) + 61;
+        break;
+    }
+  });
+  items.sort((a, b) => a.price - b.price);
   populateTable();
+}
 
-  // Define the refreshPrices function
-  function refreshPrices() {
-    // Generate random prices for each item
-    items.forEach(item => {
-      switch (item.material) {
-        case 'Wood':
-          item.price = Math.floor(Math.random() * 10) + 1;
-          break;
-        case 'Iron':
-          item.price = Math.floor(Math.random() * 40) + 11;
-          break;
-        case 'Silver':
-          item.price = Math.floor(Math.random() * 90) + 61;
-          break;
-      }
+function populateTable() {
+  items.forEach(item => {
+    const cell = document.getElementById(`${item.material.toLowerCase()}-${item.type.toLowerCase()}`);
+    cell.textContent = `${item.price} gold`;
+    cell.addEventListener('click', () => {
+      showItemDetails(item);
     });
+  });
+}
 
-    // Sort the items by price
-    items.sort((a, b) => a.price - b.price);
-
-    // Populate the table cells with the new prices
-    populateTable();
-  }
-
-  // Define the populateTable function
-  function populateTable() {
-    items.forEach(item => {
-      const cell = document.getElementById(`${item.material.toLowerCase()}-${item.type.toLowerCase()}`);
-      cell.textContent = `${item.price} gold`;
-      cell.addEventListener('click', () => {
-        showItemDetails(item);
-      });
-    });
-  }
+document.addEventListener('DOMContentLoaded', () => {
+  refreshPrices();
 });
