@@ -25,11 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
       <h2>${item.material} ${item.type}</h2>
       <p>Price: ${item.price} gold</p>
     `;
+    details.addEventListener('click', hideItemDetails);
   }
 
   // Define the hideItemDetails function
   function hideItemDetails() {
     const details = document.getElementById('details');
     details.innerHTML = '';
+    details.removeEventListener('click', hideItemDetails);
   }
 });
