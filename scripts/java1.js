@@ -1,3 +1,20 @@
+// Define the showItemDetails function
+function showItemDetails(item) {
+  const details = document.getElementById('details');
+  details.innerHTML = `
+    <h2>${item.material} ${item.type}</h2>
+    <p>Price: ${item.price} gold</p>
+  `;
+  details.addEventListener('click', hideItemDetails);
+}
+
+// Define the hideItemDetails function
+function hideItemDetails() {
+  const details = document.getElementById('details');
+  details.innerHTML = '';
+  details.removeEventListener('click', hideItemDetails);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Define the items array
   let items = [
@@ -11,23 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Populate the table cells with prices
   populateTable();
-
-  // Define the showItemDetails function
-  function showItemDetails(item) {
-    const details = document.getElementById('details');
-    details.innerHTML = `
-      <h2>${item.material} ${item.type}</h2>
-      <p>Price: ${item.price} gold</p>
-    `;
-    details.addEventListener('click', hideItemDetails);
-  }
-
-  // Define the hideItemDetails function
-  function hideItemDetails() {
-    const details = document.getElementById('details');
-    details.innerHTML = '';
-    details.removeEventListener('click', hideItemDetails);
-  }
 
   // Define the refreshPrices function
   function refreshPrices() {
