@@ -7,7 +7,6 @@
   </head>
   <body>
     <h1>Armor and Swords</h1>
-    <button onclick="refreshPrices()">Refresh</button>
     <table>
       <tr>
         <th></th>
@@ -17,17 +16,20 @@
       </tr>
       <tr>
         <th>Armor</th>
-        <td id="wood-armor" onclick="showItemDetails(items[0])"></td>
-        <td id="iron-armor" onclick="showItemDetails(items[1])"></td>
-        <td id="silver-armor" onclick="showItemDetails(items[2])"></td>
+        <td id="wood-armor" data-id="wood-armor"></td>
+        <td id="iron-armor" data-id="iron-armor"></td>
+        <td id="silver-armor" data-id="silver-armor"></td>
       </tr>
       <tr>
         <th>Weapons</th>
-        <td id="wood-weapon" onclick="showItemDetails(items[3])"></td>
-        <td id="iron-weapon" onclick="showItemDetails(items[4])"></td>
-        <td id="silver-weapon" onclick="showItemDetails(items[5])"></td>
+        <td id="wood-weapon" data-id="wood-weapon"></td>
+        <td id="iron-weapon" data-id="iron-weapon"></td>
+        <td id="silver-weapon" data-id="silver-weapon"></td>
       </tr>
     </table>
     <div id="details"></div>
+    <div class="button-container">
+      <button onclick="refreshPrices()" class="refresh-button">Refresh</button>
+    </div>
   </body>
 </html>
