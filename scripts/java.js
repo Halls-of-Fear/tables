@@ -1,3 +1,22 @@
+const valueMapping = {
+  'wood': 1,
+  'iron': 2,
+  'silver': 3,
+  'rusty': 1,
+  'light': 2,
+  'heavy': 3,
+  'glowing': 4,
+  'enchanted': 5,
+  'magical': 6,
+  'by': 1,
+  'with': 2,
+  'scratches': 1,
+  'runes': 2,
+  'fire': 3,
+  'frost': 4,
+  'magic': 5,
+};
+
 let items = [
   { material: 'Wood', type: 'Armor', price: 0 },
   { material: 'Iron', type: 'Armor', price: 0 },
@@ -29,28 +48,38 @@ function generateDescriptions() {
 
     let fullItemId = `${item.material.charAt(0).toUpperCase()}${item.material.slice(1)} ${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}`;
     let randomDescription = `${randomAdjective} ${fullItemId} ${randomParticiple} ${randomPretext} ${randomNoun}`;
-    
+
     descriptions[item.id] = randomDescription;
   });
+}
+
+function calculateValue(description) {
+  const words = description.split(' ');
+  let totalValue = 0;
+  words.forEach(word => {
+    const value = valueMapping[word.toLowerCase()];
+    if (value) {
+      totalValue += value;
+    }
+  });
+  return totalValue;
 }
 
 function showItemDetails(item) {
   const details = document.getElementById('details');
   let fullItemId = `${item.material.charAt(0).toUpperCase()}${item.material.slice(1)} ${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}`;
-  
-  details.innerHTML = `
-    <h2>${fullItemId}</h2>
-    <table>
-      <tr>
-        <th>Price</th>
-        <th>Description</th>
-      </tr>
-      <tr>
-        <td>${item.price} gold</td>
-        <td>${descriptions[item.id]}</td>
-      </tr>
-    </table>
-  `;
+
+  details.innerHTML = `<h2>${fullItemId}</h2>
+                        <table>
+                          <tr>
+                            <th>Price</th>
+                            <th>Description</th>
+                          </tr>
+                          <tr>
+                            <td>${item.price} gold</td>
+                            <td>${descriptions[item.id]}</td>
+                          </tr>
+                        </table>`;
   details.addEventListener('click', hideItemDetails);
 }
 
@@ -66,17 +95,17 @@ function refreshPrices() {
   items.forEach(item => {
     switch (item.material) {
       case 'Wood':
-        item.price = Math.floor(Math.random() * 10) + 1;
+        item.price = calculateValue(descriptions[item.id]) * 5; // arbitrary multiplier
         break;
       case 'Iron':
-        item.price = Math.floor(Math.random() * 40) + 11;
+        item.price = calculateValue(descriptions[item.id]) * 10; // arbitrary multiplier
         break;
       case 'Silver':
-        item.price = Math.floor(Math.random() * 90) + 61;
+        item.price = calculateValue(descriptions[item.id]) * 20; // arbitrary multiplier
         break;
     }
   });
-  generateDescriptions(); // added this line to refresh the item descriptions
+  generateDescriptions();
   items.sort((a, b) => a.price - b.price);
   populateTable();
   hideItemDetails();
