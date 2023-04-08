@@ -1,7 +1,10 @@
 const valueMapping = {
+  'armor':1,
+  'weapon':1,
   'wood': 1,
   'iron': 2,
   'silver': 3,
+  'shiny':5,
   'rusty': 1,
   'light': 2,
   'heavy': 3,
@@ -10,12 +13,12 @@ const valueMapping = {
   'magical': 6,
   'by': 1,
   'with': 2,
-  'scratches': 1,
+  'scratches': -5,
   'runes': 2,
   'fire': 3,
   'frost': 4,
   'magic': 5,
-  'blessed': 100,
+  'blessed': 30,
   'cursed': -30,
   'enchanted': 6,
   'tempered': 2,
@@ -40,7 +43,7 @@ let data = {
   adjectives: ['shiny', 'rusty', 'enchanced', 'glowing', 'heavy', 'light', 'magical'],
   participles: ['blessed', 'cursed', 'enchanted', 'strengthened', 'tempered', 'cavered'],
   pretext: ['with', 'by'],
-  nouns: ['magic', 'runes', 'scrathes', 'fire', 'frost']
+  nouns: ['magic', 'runes', 'scratches', 'fire', 'frost']
 };
 
 let descriptions = {};
@@ -64,13 +67,36 @@ function generateDescriptions() {
 function calculateValue(description) {
   const words = description.split(' ');
   let totalValue = 0;
+  let material = '';
+  let type = '';
+
   words.forEach(word => {
     const value = valueMapping[word.toLowerCase()];
     if (value) {
       totalValue += value;
       console.log(`Word: ${word}, Value: ${value}`);
+      if (word.toLowerCase() === 'wood' || word.toLowerCase() === 'iron' || word.toLowerCase() === 'silver') {
+        material = word.toLowerCase();
+      } else if (word.toLowerCase() === 'armor' || word.toLowerCase() === 'weapon') {
+        type = word.toLowerCase();
+      }
+    } else {
+      console.log(`Word: ${word}, Value not found`);
     }
   });
+
+  console.log(`Material: ${material}, Type: ${type}`);
+
+  if (material && type) {
+    const materialValue = valueMapping[material];
+    const typeValue = valueMapping[type];
+    if (materialValue && typeValue) {
+      // Remove the following line:
+      // totalValue += materialValue + typeValue;
+      console.log(`Material Value: ${materialValue}, Type Value: ${typeValue}`);
+    }
+  }
+
   console.log(`Total Value: ${totalValue}`);
   return totalValue;
 }
@@ -101,17 +127,7 @@ function hideItemDetails() {
 
 function refreshPrices() {
   items.forEach(item => {
-    switch (item.material) {
-      case 'Wood':
-        item.price = calculateValue(descriptions[item.id]) * 5; // arbitrary multiplier
-        break;
-      case 'Iron':
-        item.price = calculateValue(descriptions[item.id]) * 10; // arbitrary multiplier
-        break;
-      case 'Silver':
-        item.price = calculateValue(descriptions[item.id]) * 20; // arbitrary multiplier
-        break;
-    }
+    item.price = calculateValue(descriptions[item.id]);
 
     console.log(`Item: ${item.id}, New Price: ${item.price}`);
 
