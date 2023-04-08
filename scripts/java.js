@@ -6,7 +6,7 @@ const valueMapping = {
   'light': 2,
   'heavy': 3,
   'glowing': 4,
-  'enchanted': 5,
+  'enchanced': 5,
   'magical': 6,
   'by': 1,
   'with': 2,
@@ -15,6 +15,12 @@ const valueMapping = {
   'fire': 3,
   'frost': 4,
   'magic': 5,
+  'blessed': 100,
+  'cursed': -30,
+  'enchanted': 6,
+  'tempered': 2,
+  'cavered': 3,
+  'strengthened': 4,
 };
 
 let items = [
@@ -31,7 +37,7 @@ items.forEach(item => {
 });
 
 let data = {
-  adjectives: ['shiny', 'rusty', 'enchanted', 'glowing', 'heavy', 'light', 'magical'],
+  adjectives: ['shiny', 'rusty', 'enchanced', 'glowing', 'heavy', 'light', 'magical'],
   participles: ['blessed', 'cursed', 'enchanted', 'strengthened', 'tempered', 'cavered'],
   pretext: ['with', 'by'],
   nouns: ['magic', 'runes', 'scrathes', 'fire', 'frost']
@@ -45,6 +51,8 @@ function generateDescriptions() {
     let randomParticiple = data.participles[Math.floor(Math.random() * data.participles.length)];
     let randomPretext = data.pretext[Math.floor(Math.random() * data.pretext.length)];
     let randomNoun = data.nouns[Math.floor(Math.random() * data.nouns.length)];
+
+    console.log(`Adjective: ${randomAdjective}, Participle: ${randomParticiple}, Pretext: ${randomPretext}, Noun: ${randomNoun}`);
 
     let fullItemId = `${item.material.charAt(0).toUpperCase()}${item.material.slice(1)} ${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}`;
     let randomDescription = `${randomAdjective} ${fullItemId} ${randomParticiple} ${randomPretext} ${randomNoun}`;
@@ -60,8 +68,10 @@ function calculateValue(description) {
     const value = valueMapping[word.toLowerCase()];
     if (value) {
       totalValue += value;
+      console.log(`Word: ${word}, Value: ${value}`);
     }
   });
+  console.log(`Total Value: ${totalValue}`);
   return totalValue;
 }
 
@@ -90,8 +100,6 @@ function hideItemDetails() {
 }
 
 function refreshPrices() {
-  const details = document.getElementById('details');
-  details.innerHTML = '';
   items.forEach(item => {
     switch (item.material) {
       case 'Wood':
@@ -104,11 +112,19 @@ function refreshPrices() {
         item.price = calculateValue(descriptions[item.id]) * 20; // arbitrary multiplier
         break;
     }
+
+    console.log(`Item: ${item.id}, New Price: ${item.price}`);
+
+    const cell = document.querySelector(`td[data-id="${item.id}"]`);
+    cell.textContent = `${item.price} gold`;
+
+    cell.addEventListener('click', () => {
+      showItemDetails(item);
+    });
   });
+
   generateDescriptions();
-  items.sort((a, b) => a.price - b.price);
-  populateTable();
-  hideItemDetails();
+  items.sort((a, b) => b.price - a.price);
 }
 
 function populateTable() {
